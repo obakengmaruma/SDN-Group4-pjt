@@ -18,20 +18,24 @@ Team Roles
 
 Lehlogonolo Obakeng Maruma (Day 5):
 
-• Main.Java 
-• Encryption.java 
+• Main.Java
+
+• Encryption.java
 
 Letlhogonolo Peter Bosoga (day 5):
 
-• KeyGenerator.java 
+• KeyGenerator.java
+
 • RSAKeyPair.java 
 
 Ndivhuwo Mokgobanama(day 1-4):
 
-• CRTDecryption.java 
+• CRTDecryption.java
+
 • Calculations using Garner’s Formula 
 
-Thaoelo Lloyd Matjia(Day 6): 
+Thaoelo Lloyd Matjia(Day 6):
+
 • FileHandler.java
 
 • The logic
