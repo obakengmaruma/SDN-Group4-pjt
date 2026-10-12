@@ -32,8 +32,9 @@ Ndivhuwo Mokgobanama(day 1-4):
 • Calculations using Garner’s Formula 
 
 Thaoelo Lloyd Matjia(Day 6): 
-• FileHandler.java 
-• The logic 
+• FileHandler.java
+
+• The logic
 
 Samukelisiwe Madonsela (Day 6) try working with person 4:
 
@@ -45,14 +46,18 @@ Tyrah Mgiba(Day 5):
 
 Moitiki Ntombikayise Lekganyane (Day 6):
 
-• ActivityLogger.java 
+• ActivityLogger.java
+
 • Testing 
 
 Precious Lebogang Malapane (day 7):
 
-• No classes, Just Documentation of progress 
-• Designing the final UML class Diagram 
-• Report 
+• No classes, Just Documentation of progress
+
+• Designing the final UML class Diagram
+
+• Report
+
  
 Milestones 
 
