@@ -12,7 +12,8 @@ concepts.
 
 Initial UML Diagram 
  
- 
+ <img width="933" height="460" alt="WhatsApp Image 2026-10-02 at 18 40 19" src="https://github.com/user-attachments/assets/1272eb2b-d6b6-4770-9400-61d2ce48af54" />
+
 Team Roles 
 
 Lehlogonolo Obakeng Maruma (Day 5): 
