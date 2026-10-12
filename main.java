@@ -10,9 +10,7 @@ public class main {
             System.out.println("1. Encrypt a file");
             System.out.println("2. Decrypt a file");
             System.out.println("3. Generate new key pair");
-            
             System.out.println("4. View activity log");
-            
             System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
 
