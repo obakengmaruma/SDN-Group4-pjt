@@ -19,24 +19,29 @@ Team Roles
 Lehlogonolo Obakeng Maruma (Day 5): 
 • Main.Java 
 • Encryption.java 
+
 Letlhogonolo Peter Bosoga (day 5): 
-2 
- 
 • KeyGenerator.java 
 • RSAKeyPair.java 
+
 Ndivhuwo Mokgobanama(day 1-4): 
 • CRTDecryption.java 
 • Calculations using Garner’s Formula 
+
 Thaoelo Lloyd Matjia(Day 6): 
 • FileHandler.java 
 • The logic 
+
 Samukelisiwe Madonsela (Day 6) try working with person 4: 
 • FileCryptoService.java 
+
 Tyrah Mgiba(Day 5): 
 • KeyVault.java 
+
 Moitiki Ntombikayise Lekganyane (Day 6): 
 • ActivityLogger.java 
 • Testing 
+
 Precious Lebogang Malapane (day 7) 
 • No classes, Just Documentation of progress 
 • Designing the final UML class Diagram 
