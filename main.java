@@ -6,9 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-public class Main {
+public class main {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final FileCryptoService service = new FileCryptoService();
+   // private static final FileCryptoService service = new FileCryptoService();
 
     public static void main(String[] args) {
         int choice;
