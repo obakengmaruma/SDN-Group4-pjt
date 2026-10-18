@@ -40,6 +40,7 @@ public class main {
         } catch (NumberFormatException e) { 
             return 0;
         } // for invalid input
+
     }
 
     public static void handle(int choice) {
@@ -62,6 +63,7 @@ public class main {
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
+                    pause();
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -117,5 +119,13 @@ public class main {
             return false;
         }
         return true;
+    }
+
+    private static void pause(){
+        try { 
+            Thread.sleep(2000); // Pause for 2 seconds
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
