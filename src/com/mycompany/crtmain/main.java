@@ -48,18 +48,23 @@ public class main {
             switch (choice) {
                 case 1:
                     encrypt();
+                    pause2();
                     break;
                 case 2:
                     decrypt();
+                    pause2();
                     break;
                 case 3:
                     generateKeys();
+                    pause2();
                     break;
                 case 4:
                     System.out.println("Activity log feature is not implemented yet.");
+                    pause();
                     break;
                 case 5:
                     System.out.println("Exiting the program.");
+                    pause();
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -72,27 +77,31 @@ public class main {
 // prompts the user for a file path and checks if it's a valid file
     private static void encrypt() throws IOException {
         if(!hasKeys()) {
-            System.out.println("No RSA key pair found.  Choose Option 3 first");
+            
+            pause(); 
             return;
         }
         Path in = askFile("File to encrypt: ");
         Path out = Paths.get(in + ".enc");
         service.encryptFile(in.toString(), out.toString(), keypair );
-        //System.out.println("Encrypted to: " + out);
+        
     }
 
     private static void generateKeys() {
         System.out.println("Generating new RSA key pair...");
+        pause();
         keypair = KeyGenerator.generateKeys(KEY_SIZE);
+        
         System.out.println("New RSA key pair generated.");
-        //System.out.println("Public Key: " + keypair.getPublicKey());
-      //  System.out.println("Private Key: " + keypair.getPrivateKey());
+       
+      pause2();
     }
 
     
     private static void decrypt() throws IOException {
         if(!hasKeys()) {
-            System.out.println("No RSA key pair found.  Choose Option 3 first");
+            
+            pause(); // Pause for 1 second 
             return;
         }
 
@@ -100,7 +109,7 @@ public class main {
         String name = in.toString();
         Path out = Paths.get(name.endsWith(".enc") ? name.substring(0, name.length() - 4) : name + ".dec");
         service.decryptFile(in.toString(), out.toString(), keypair);
-        //System.out.println("Decrypted to: " + out);
+        pause();
     }
 
    
@@ -109,8 +118,10 @@ public class main {
         Path path = Paths.get(scanner.nextLine().trim());
         if (!Files.isRegularFile(path)) {
             throw new IllegalArgumentException("Not a valid file: " + path);
+            
         }
         return path; // Return the valid file path
+        
     }
 
     private static boolean hasKeys() {
@@ -123,7 +134,15 @@ public class main {
 
     private static void pause(){
         try { 
-            Thread.sleep(2000); // Pause for 2 seconds
+            Thread.sleep(1000); // Pause for 1 second
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+        private static void pause2(){
+        try { 
+            Thread.sleep(500); // Pause for 0.5 second
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
