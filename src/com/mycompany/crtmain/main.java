@@ -170,5 +170,5 @@ public class main {
     private static boolean confirm(String message) {
     System.out.print(message + " Press Enter to confirm (or type n to cancel): ");
     return !scanner.nextLine().trim().equalsIgnoreCase("n");
-}
+    }
 }
