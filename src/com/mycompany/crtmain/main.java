@@ -70,7 +70,7 @@ public class main {
 // prompts the user for a file path and checks if it's a valid file
     private static void encrypt() throws IOException {
         if(!hasKeys()) {
-            System.out.println("No RSA key pair found.  Choose Option 3 first");
+            
             return;
         }
         Path in = askFile("File to encrypt: ");
@@ -90,13 +90,29 @@ public class main {
     
     private static void decrypt() throws IOException {
         if(!hasKeys()) {
-            System.out.println("No RSA key pair found.  Choose Option 3 first");
+            
             return;
         }
 
         Path in = askFile("File to decrypt: ");
         String name = in.toString();
-        Path out = Paths.get(name.endsWith(".enc") ? name.substring(0, name.length() - 4) : name + ".dec");
+        
+        if (name.endsWith(".enc")){
+            name = name.substring(0, name.length() - 4); // Remove the ".enc" extension
+        }
+        int dot = name.lastIndexOf('.');
+        int sep = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
+        String suggestName = dot > sep ? name.substring(0, dot) + "_DECRYPTED" + name.substring(dot) : name + "_DECRYPTED";
+
+        System.out.print("Save file as [" + suggestName + "]: ");
+        String outName = scanner.nextLine().trim();
+        Path out = Paths.get(outName.isEmpty() ? suggestName : outName);
+
+        if(Files.exists(out)){
+            System.out.println("File already exists: " + out);
+            return;
+        }
+
         service.decryptFile(in.toString(), out.toString(), keypair);
         //System.out.println("Decrypted to: " + out);
     }
