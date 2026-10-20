@@ -78,10 +78,7 @@ public class main {
     private static void encrypt() throws IOException {
         if(!hasKeys()) {
             
-<<<<<<< HEAD
-=======
             pause(); 
->>>>>>> 51f271c269254ce89371adf474364ac8d0ac56c9
             return;
         }
         Path in = askFile("File to encrypt: ");
@@ -104,10 +101,6 @@ public class main {
     private static void decrypt() throws IOException {
         if(!hasKeys()) {
             
-<<<<<<< HEAD
-=======
-            pause(); // Pause for 1 second 
->>>>>>> 51f271c269254ce89371adf474364ac8d0ac56c9
             return;
         }
 
@@ -121,7 +114,7 @@ public class main {
         int sep = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
         String suggestName = dot > sep ? name.substring(0, dot) + "_DECRYPTED" + name.substring(dot) : name + "_DECRYPTED";
 
-        System.out.print("Save file as [" + suggestName + "]: ");
+        System.out.println("Save file as [" + suggestName + "]: ");
         String outName = scanner.nextLine().trim();
         Path out = Paths.get(outName.isEmpty() ? suggestName : outName);
 
@@ -129,9 +122,13 @@ public class main {
             System.out.println("File already exists: " + out);
             return;
         }
+        if (!confirm("Decrypt " + in + " and save as " + out + "?")) {
+    System.out.println("Cancelled.");
+    return;
+    }
 
         service.decryptFile(in.toString(), out.toString(), keypair);
-        pause();
+        
     }
 
    
@@ -169,4 +166,9 @@ public class main {
             Thread.currentThread().interrupt();
         }
     }
+
+    private static boolean confirm(String message) {
+    System.out.print(message + " Press Enter to confirm (or type n to cancel): ");
+    return !scanner.nextLine().trim().equalsIgnoreCase("n");
+}
 }
