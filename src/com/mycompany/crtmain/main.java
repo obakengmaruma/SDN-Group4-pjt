@@ -30,6 +30,7 @@ public class main {
         System.out.println("3. Generate a new key-pair");
         System.out.println("4. View activity log");
         System.out.println("5. Exit");
+       // System.out.println("6. GUI");
     }
 
     public static int readChoice() {
@@ -66,6 +67,8 @@ public class main {
                     System.out.println("Exiting the program.");
                     pause();
                     break;
+                case 6:
+                    //Add Gui case
                 default:
                     System.out.println("Invalid choice. Please try again.");
                     pause();
