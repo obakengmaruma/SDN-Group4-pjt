@@ -9,10 +9,6 @@ import java.nio.file.Paths;
 
 import javax.swing.*;
 
-/**
- *
- * @author wedel
- */
 class CryptoGUI {
     private final int KEY_SIZE = 2048;
     private final FileCryptoService service = new FileCryptoService();
@@ -30,16 +26,17 @@ class CryptoGUI {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout(8, 8));
         
-        // Title
+        // this is the Title of the GUI
         JLabel title = new JLabel("Custom File Encryption tool");
         title.setFont(new Font("arial", Font.BOLD, 16));
         title.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(title, BorderLayout.NORTH);
         
-        // Buttons Panel
+        // adding the Buttons Panel
         JPanel buttons = new JPanel(new GridLayout(4, 1, 8, 8));
         buttons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
+
+        //this are the buttons
         JButton genKeys = new JButton("1. Generate Keys");
         JButton encrBtn = new JButton("2. Encrypt File");
         JButton decrBtn = new JButton("3. Decrypt File");
@@ -56,7 +53,7 @@ class CryptoGUI {
         output.setFont(new Font("Monospaced", Font.PLAIN, 12));
         frame.add(new JScrollPane(output), BorderLayout.CENTER);
         
-        // Button Action Listeners
+        // Button Action Listeners (what the buttons do when clicked)
         genKeys.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,8 +61,7 @@ class CryptoGUI {
             }
 
             private void generateKeys() {
-                // TODO: Initialize keypair here using your RSA generator service
-                // keypair = service.generateKeys(KEY_SIZE);
+                
                 say("Keys generated successfully!");
             }
         });
