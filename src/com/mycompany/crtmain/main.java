@@ -16,6 +16,8 @@ public class main {
     private static RSAKeyPair keypair;
 // runs the main menu loop 
    public static void main(String[] args) {
+       //links activity logger to rest of the code
+       ActivityLogger.install();
      // dispay GUI and check if the program is running in console mode  
     boolean console = args.length > 0 && args[0].equalsIgnoreCase("console");  
 if (!console && !GraphicsEnvironment.isHeadless()) {
