@@ -82,6 +82,12 @@ public class main {
             return;
         }
         Path in = askFile("File to encrypt: ");
+
+        if (Files.size(in) > 255) {
+    System.out.println("File is too large for this prototype (maximum 255 bytes).");
+    pause();
+    return;
+            }
         Path out = Paths.get(in + ".enc");
         service.encryptFile(in.toString(), out.toString(), keypair );
         
@@ -99,37 +105,37 @@ public class main {
 
     
     private static void decrypt() throws IOException {
-        if(!hasKeys()) {
-            
-            return;
-        }
-
-        Path in = askFile("File to decrypt: ");
-        String name = in.toString();
-        
-        if (name.endsWith(".enc")){
-            name = name.substring(0, name.length() - 4); // Remove the ".enc" extension
-        }
-        int dot = name.lastIndexOf('.');
-        int sep = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
-        String suggestName = dot > sep ? name.substring(0, dot) + "_DECRYPTED" + name.substring(dot) : name + "_DECRYPTED";
-
-        System.out.println("Save file as [" + suggestName + "]: ");
-        String outName = scanner.nextLine().trim();
-        Path out = Paths.get(outName.isEmpty() ? suggestName : outName);
-
-        if(Files.exists(out)){
-            System.out.println("File already exists: " + out);
-            return;
-        }
-        if (!confirm("Decrypt " + in + " and save as " + out + "?")) {
-    System.out.println("Cancelled.");
-    return;
+    if (!hasKeys()) {
+        return;
     }
 
-        service.decryptFile(in.toString(), out.toString(), keypair);
-        
+    Path in = askFile("File to decrypt: ");
+    String name = in.getFileName().toString();
+    if (name.endsWith(".enc")) {
+        name = name.substring(0, name.length() - 4);
     }
+    int dot = name.lastIndexOf('.');
+    String suggestName = dot > 0 ? name.substring(0, dot) + "_DECRYPTED" + name.substring(dot) : name + "_DECRYPTED";
+
+    System.out.print("Save as (file name only) [" + suggestName + "]: ");
+    String outName = scanner.nextLine().trim();
+    Path out = in.resolveSibling(outName.isEmpty() ? suggestName : outName);
+
+    if (Files.exists(out)) {
+        System.out.print("File already exists: " + out + ". Type y to overwrite: ");
+        if (!scanner.nextLine().trim().equalsIgnoreCase("y")) {
+            System.out.println("Cancelled.");
+            return;
+        }
+    }
+
+    if (!confirm("Decrypt " + in + " and save as " + out + "?")) {
+        System.out.println("Cancelled.");
+        return;
+    }
+
+    service.decryptFile(in.toString(), out.toString(), keypair);
+}
 
    
     private static Path askFile(String prompt) {
