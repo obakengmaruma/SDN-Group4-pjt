@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.awt.GraphicsEnvironment;
 
 public class main {
 
@@ -15,7 +16,14 @@ public class main {
     private static RSAKeyPair keypair;
 // runs the main menu loop 
    public static void main(String[] args) {
-        int choice;
+     // dispay GUI and check if the program is running in console mode  
+    boolean console = args.length > 0 && args[0].equalsIgnoreCase("console");  
+if (!console && !GraphicsEnvironment.isHeadless()) {
+            SwingUtilities.invokeLater(() -> new CryptoGUI());
+            return; // Exit the console mode if GUI is launched        
+    }
+    
+    int choice;
         do {
             Menu();
             choice = readChoice();

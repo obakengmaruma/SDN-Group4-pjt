@@ -61,7 +61,7 @@ class CryptoGUI {
             }
 
             private void generateKeys() {
-                
+                keypair = KeyGenerator.generateKeys(KEY_SIZE);
                 say("Keys generated successfully!");
             }
         });
@@ -90,10 +90,16 @@ class CryptoGUI {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        say("Welcome! Click 'Generate keys' first, then encrypt a file");
+        say("-----Welcome!------\n  Click 'Generate keys' first, then encrypt a file");
     }
 
     private void doCrypto(boolean encrypt) {
+        
+        if(keypair == null){
+            say("Error: Please generate keys first.");
+            return;
+        }
+        
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle(encrypt ? "Select file to encrypt" : "Select file to decrypt");
 
@@ -124,12 +130,20 @@ class CryptoGUI {
         }
 
         if (encrypt) {
-            service.encryptFile(src.toString(), dest.toString(), keypair);
-            say("File encrypted successfully:\n" + src.getFileName() + "\nSaved as:\n" + dest.getFileName());
+            if(service.encryptFile(src.toString(), dest.toString(), keypair)){
+                say("File encrypted successfully:\n" + src.getFileName() + "\nSaved as:\n" + dest.getFileName());
+            }else{
+                say("Error: Encryption failed for file: " + src.getFileName());
+            }
         } else {
-            service.decryptFile(src.toString(), dest.toString(), keypair);
-            say("File decrypted successfully:\n" + src.getFileName() + "\nSaved as:\n" + dest.getFileName());
+            if(service.decryptFile(src.toString(), dest.toString(), keypair)){
+                say("File decrypted successfully:\n" + src.getFileName() + "\nSaved as:\n" + dest.getFileName());
+            }else{
+                say("Error: Decryption failed for file: " + src.getFileName());
+            }
         }
+
+
     }
 
     public static void main(String[] args) {
