@@ -7,11 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
  
-/**
- * Writes an activity log (activity_log.txt) for the File Encryption Tool.
- * Usage: call ActivityLogger.install() once at the start of main().
- * Only file names and outcomes are logged - never keys or file contents.
- */
+//Writes an activity log (activity_log.txt)
+// File names and outcomes are logged 
 public class ActivityLogger {
  
     public enum Action { APP_START, KEY_GENERATION, ENCRYPT, DECRYPT, VIEW_LOG, CLEAR_LOG, APP_EXIT }
@@ -21,7 +18,6 @@ public class ActivityLogger {
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static boolean installed = false;
  
-    /** Adds one line to the log, e.g. "2026-10-27 14:03:11 | ENCRYPT | SUCCESS | a.txt.enc". Never throws. */
     public static synchronized void log(Action action, Status status, String details) {
         String clean = details.replaceAll("[\r\n]+", " ").replace("|", "/").trim();
         String line = LocalDateTime.now().format(TIME) + " | " + action + " | " + status + " | " + clean
@@ -33,7 +29,7 @@ public class ActivityLogger {
         }
     }
  
-    /** Returns the whole log as text (also handy for the GUI text area). */
+    // Returns the whole log as text 
     public static synchronized String getLogAsText() {
         try {
             List<String> lines = Files.exists(LOG) ? Files.readAllLines(LOG) : List.of();
@@ -44,13 +40,13 @@ public class ActivityLogger {
         }
     }
  
-    /** View log: prints the whole log to the console (menu option 4). */
+  //View log
     public static void printLog() {
         System.out.println(getLogAsText());
         log(Action.VIEW_LOG, Status.INFO, "Activity log viewed");
     }
  
-    /** Clear log: deletes all entries, then records that the log was cleared. Returns true on success. */
+    //Clear log
     public static synchronized boolean clearLog() {
         try {
             Files.deleteIfExists(LOG);
@@ -62,7 +58,6 @@ public class ActivityLogger {
         return true;
     }
  
-    /** Call once at the start of main(): logs automatically from then on. */
     public static synchronized void install() {
         if (installed) return;
         installed = true;
@@ -72,9 +67,7 @@ public class ActivityLogger {
                 new Thread(() -> log(Action.APP_EXIT, Status.INFO, "Application closed")));
     }
  
-    // Prints everything normally, but also turns the existing messages
-    // from FileCryptoService / main into log entries.
-    // If those messages are reworded, update the matching text below.
+    // Prints everything normally from CryptoService or main
     private static class Watcher extends PrintStream {
         private String last = "", error = "";
  
@@ -103,14 +96,12 @@ public class ActivityLogger {
             last = t;
         }
  
-        // "File saved: /home/me/a.txt" -> "a.txt"
         private static String name(String line) {
             Path p = Paths.get(line.substring(line.indexOf(':') + 1).trim()).getFileName();
             return p == null ? "-" : p.toString();
         }
     }
  
-    /** Without running the app:  java com.mycompany.crtmain.ActivityLogger [clear] */
     public static void main(String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("clear")) {
             System.out.println(clearLog() ? "Activity log cleared." : "Failed to clear log.");
