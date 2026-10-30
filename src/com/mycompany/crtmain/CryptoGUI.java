@@ -33,18 +33,20 @@ class CryptoGUI {
         frame.add(title, BorderLayout.NORTH);
         
         // adding the Buttons Panel
-        JPanel buttons = new JPanel(new GridLayout(4, 1, 8, 8));
+        JPanel buttons = new JPanel(new GridLayout(5, 1, 8, 8));
         buttons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         //this are the buttons
         JButton genKeys = new JButton("1. Generate Keys");
         JButton encrBtn = new JButton("2. Encrypt File");
         JButton decrBtn = new JButton("3. Decrypt File");
-        JButton exit = new JButton("4. Exit");
+        JButton logBtn = new JButton("4. View Activity Log");
+        JButton exit = new JButton("5. Exit");
 
         buttons.add(genKeys);
         buttons.add(encrBtn);
         buttons.add(decrBtn);
+        buttons.add(logBtn);
         buttons.add(exit);
         frame.add(buttons, BorderLayout.EAST);
         
@@ -62,6 +64,7 @@ class CryptoGUI {
 
             private void generateKeys() {
                 keypair = KeyGenerator.generateKeys(KEY_SIZE);
+                ActivityLogger.log(ActivityLogger.Action.KEY_GENERATION, ActivityLogger.Status.SUCCESS, "New RSA key pair generated");
                 say("Keys generated successfully!");
             }
         });
@@ -77,6 +80,16 @@ class CryptoGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 doCrypto(false);
+            }
+        });
+
+        logBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextArea logArea = new JTextArea(ActivityLogger.getLogAsText());
+                logArea.setEditable(false);
+                JOptionPane.showMessageDialog(frame, new JScrollPane(logArea), "Activity Log", JOptionPane.INFORMATION_MESSAGE);
+                ActivityLogger.log(ActivityLogger.Action.VIEW_LOG, ActivityLogger.Status.INFO,"Activity log viewed." );
             }
         });
         

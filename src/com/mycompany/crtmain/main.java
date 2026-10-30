@@ -71,15 +71,14 @@ if (!console && !GraphicsEnvironment.isHeadless()) {
                     pause2();
                     break;
                 case 4:
-                    System.out.println("Activity log feature is not implemented yet.");
+                   ActivityLogger.printLog();
                     pause();
                     break;
                 case 5:
                     System.out.println("Exiting the program.");
                     pause();
                     break;
-                case 6:
-                   CryptoGUI crypto = new CryptoGUI();
+                
                 default:
                     System.out.println("Invalid choice. Please try again.");
                     pause();
@@ -97,11 +96,7 @@ if (!console && !GraphicsEnvironment.isHeadless()) {
         }
         Path in = askFile("File to encrypt: ");
 
-        if (Files.size(in) > 255) {
-    System.out.println("File is too large for this prototype (maximum 255 bytes).");
-    pause();
-    return;
-            }
+       
         Path out = Paths.get(in + ".enc");
         service.encryptFile(in.toString(), out.toString(), keypair );
         
