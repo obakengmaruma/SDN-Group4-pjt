@@ -20,6 +20,119 @@ class CryptoGUI {
         output.append(message + "\n");
         output.setCaretPosition(output.getDocument().getLength());
     }
+
+    private static final String VAULT_FILE = "keyvault.dat";
+    private static final String KEY_ALIAS = "default";
+    private KeyVault vault;
+
+    private void logVault(ActivityLogger.Status s, String d) {
+    ActivityLogger.log(ActivityLogger.Action.KEY_VAULT, s, d);
+    }
+
+    private String fingerprint(RSAKeyPair k) {
+    try {
+        byte[] h = java.security.MessageDigest.getInstance("SHA-256").digest(k.getN().toByteArray());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 8; i++) sb.append(String.format("%02X", h[i])).append(i < 7 ? ":" : "");
+        return sb.toString();
+    } catch (Exception e) {
+        return "n/a";
+    }
+    }
+
+    private char[] askPassword(String message) {
+    JPasswordField field = new JPasswordField(20);
+    int r = JOptionPane.showConfirmDialog(frame, new Object[]{message, field}, "Key Vault",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    return r == JOptionPane.OK_OPTION ? field.getPassword() : null;
+    }
+
+    private boolean unlock() {
+    if (vault != null) return true;
+    boolean isNew = !Files.exists(Paths.get(VAULT_FILE));
+    char[] pw = askPassword(isNew ? "Create a master password (it cannot be recovered):" : "Enter master password:");
+    if (pw == null || pw.length == 0) return false;
+    if (isNew) {
+        char[] again = askPassword("Confirm master password:");
+        if (again == null || !java.util.Arrays.equals(pw, again)) {
+            say("Passwords did not match.");
+            logVault(ActivityLogger.Status.FAILURE, "Vault setup cancelled: passwords did not match");
+            return false;
+        }
+        java.util.Arrays.fill(again, '\0');
+    }
+    KeyVault v = new KeyVault(VAULT_FILE, pw);
+    java.util.Arrays.fill(pw, '\0');
+    try {
+        v.getKey(KEY_ALIAS);
+    } catch (Exception ex) {
+        say("Could not open vault: wrong password or corrupted file.");
+        logVault(ActivityLogger.Status.FAILURE, "Vault unlock failed: wrong password or corrupted file");
+        return false;
+    }
+    vault = v;
+    logVault(ActivityLogger.Status.SUCCESS, isNew ? "Vault master password set" : "Vault unlocked");
+    return true;
+}
+
+    private void openVault() {
+    if (!unlock()) return;
+    String[] options = {"Save current keys", "Load saved keys", "View current keys", "Lock vault"};
+    int c = JOptionPane.showOptionDialog(frame, "Choose an action", "Key Vault",
+            JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+    try {
+        if (c == 0) {
+            if (keypair == null) {
+                say("No keys to save. Generate keys first.");
+                return;
+            }
+            vault.storeKey(KEY_ALIAS, keypair);
+            say("Key pair saved to vault.");
+            logVault(ActivityLogger.Status.SUCCESS, "Key pair saved to vault, fingerprint " + fingerprint(keypair));
+        } else if (c == 1) {
+            Object k = vault.getKey(KEY_ALIAS);
+            if (!(k instanceof RSAKeyPair)) {
+                say("No key pair stored in the vault yet.");
+                logVault(ActivityLogger.Status.INFO, "Load attempted: vault holds no key pair");
+                return;
+            }
+            if (keypair != null && JOptionPane.showConfirmDialog(frame,
+                    "This replaces the keys currently loaded. Continue?", "Key Vault",
+                    JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+                return;
+            }
+            keypair = (RSAKeyPair) k;
+            say("Key pair loaded from vault.");
+            logVault(ActivityLogger.Status.SUCCESS, "Key pair loaded from vault, fingerprint " + fingerprint(keypair));
+        } else if (c == 2) {
+            if (keypair == null) {
+                say("No keys loaded. Generate or load keys first.");
+                return;
+            }
+            JTextArea area = new JTextArea(
+                "Key size: " + keypair.getN().bitLength() + " bits\n" +
+                "Fingerprint: " + fingerprint(keypair) + "\n" +
+                "Public exponent (e): " + keypair.getE() + "\n\n" +
+                "Modulus (n), hex:\n" + keypair.getN().toString(16));
+            area.setEditable(false);
+            area.setLineWrap(true);
+            JScrollPane sp = new JScrollPane(area);
+            sp.setPreferredSize(new Dimension(480, 220));
+            JOptionPane.showMessageDialog(frame, sp, "Current Key Pair (public part)", JOptionPane.INFORMATION_MESSAGE);
+            logVault(ActivityLogger.Status.INFO, "Key pair viewed (public part), fingerprint " + fingerprint(keypair));
+        } else if (c == 3) {
+            vault.wipeMasterPassword();
+            vault = null;
+            say("Vault locked.");
+            logVault(ActivityLogger.Status.INFO, "Vault locked");
+        }
+    } catch (Exception ex) {
+        say("Vault error: " + ex.getMessage());
+        logVault(ActivityLogger.Status.FAILURE, "Vault error: " + ex.getMessage());
+    }
+}
+
+
     
     public CryptoGUI() {
         frame = new JFrame("File Encryption Tool");
@@ -33,19 +146,21 @@ class CryptoGUI {
         frame.add(title, BorderLayout.NORTH);
         
         // adding the Buttons Panel
-        JPanel buttons = new JPanel(new GridLayout(5, 1, 8, 8));
+        JPanel buttons = new JPanel(new GridLayout(6, 1, 8, 8));
         buttons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         //this are the buttons
         JButton genKeys = new JButton("1. Generate Keys");
         JButton encrBtn = new JButton("2. Encrypt File");
         JButton decrBtn = new JButton("3. Decrypt File");
-        JButton logBtn = new JButton("4. View Activity Log");
-        JButton exit = new JButton("5. Exit");
+        JButton KeyVbtn = new JButton("4. View Keys vault");
+        JButton logBtn = new JButton("5. View Activity Log");
+        JButton exit = new JButton("6. Exit");
 
         buttons.add(genKeys);
         buttons.add(encrBtn);
         buttons.add(decrBtn);
+        buttons.add(KeyVbtn);
         buttons.add(logBtn);
         buttons.add(exit);
         frame.add(buttons, BorderLayout.EAST);
@@ -80,6 +195,13 @@ class CryptoGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 doCrypto(false);
+            }
+        });
+
+        KeyVbtn.addActionListener(new ActionListener() {
+            @Override 
+            public void actionPerformed(ActionEvent e){
+                openVault();
             }
         });
 

@@ -11,7 +11,7 @@ import java.util.List;
 // File names and outcomes are logged 
 public class ActivityLogger {
  
-    public enum Action { APP_START, KEY_GENERATION, ENCRYPT, DECRYPT, VIEW_LOG, CLEAR_LOG, APP_EXIT }
+    public enum Action { APP_START, KEY_GENERATION, ENCRYPT, DECRYPT, VIEW_LOG, KEY_VAULT ,CLEAR_LOG, APP_EXIT }
     public enum Status { SUCCESS, FAILURE, INFO }
  
     private static final Path LOG = Paths.get("activity_log.txt");

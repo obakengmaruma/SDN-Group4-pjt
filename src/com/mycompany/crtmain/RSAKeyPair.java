@@ -4,7 +4,8 @@ package com.mycompany.crtmain;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-public class RSAKeyPair {
+public class RSAKeyPair implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private final BigInteger p ;
     private final BigInteger q ;
     private final BigInteger d ;

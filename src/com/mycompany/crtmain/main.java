@@ -39,9 +39,10 @@ if (!console && !GraphicsEnvironment.isHeadless()) {
         System.out.println("1. Encrypt a file");
         System.out.println("2. Decrypt a file");
         System.out.println("3. Generate a new key-pair");
-        System.out.println("4. View activity log");
-        System.out.println("5. Exit");
-        System.out.println("6. GUI");
+        System.out.println("4. View keys vault");
+        System.out.println("5. View activity log");
+        System.out.println("6. Exit");
+        System.out.println("7. GUI");
     }
 
     public static int readChoice() {
