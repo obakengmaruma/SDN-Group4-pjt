@@ -33,7 +33,12 @@ public class CRTDecryptEngine {
         public BigInteger decryptCRT(BigInteger c) {
         BigInteger m1 = c.modPow(dp, p);
         BigInteger m2 = c.modPow(dq, q);
-        return chineseRemainderCombine(m1, m2);
+        BigIntger m = chineseRemainderCombine(m1, m2);
+            //verify: reconstructed m must satisfy both original congruecnces
+            if(!m.mod(p).equals(m1) || !m.mod(q).equals(m2)){
+                throw new ArithmeticExecption("CRT Verification failed");
+            }
+            return m;
         }
 
     private BigInteger chineseRemainderCombine(BigInteger m1, BigInteger m2) {
