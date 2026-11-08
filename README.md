@@ -1,4 +1,4 @@
-# SDN_Group4
+# BTech SDN_Group4
 
 Custom File Encryption Tool 
 Group 4 
